@@ -1,6 +1,6 @@
 # Data Engineer Technical Challenge 💻
 
-## Introduction 🎬
+## Introduction_ 🎬
 
 First of all, congrats 🥳. We've enjoyed our initial chat and are pleased that you've decided to consider joining the Koodoo engineering team!
 
