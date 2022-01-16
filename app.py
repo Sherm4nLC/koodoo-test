@@ -25,3 +25,6 @@ def handler():
   df = pd.read_xml(endpoint)
   s3_put_df_to_csv(df, bucket, key=key_prefix.format(datetime.datetime.now().timestamp()), header=False)
   logger.info('Done!')
+
+if __name__ == '__main__':
+  handler()
