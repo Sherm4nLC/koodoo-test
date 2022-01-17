@@ -2,8 +2,9 @@ app_name: koodoo
 region: eu-west-2
 image_repo: 291399082936.dkr.ecr.eu-west-2.amazonaws.com/koodoo
 s3_bucket: glc-01
-local_run_endpoints:
-  - https://www.europarl.europa.eu/rss/doc/top-stories/en.xml
-  - https://www.europarl.europa.eu/rss/doc/top-stories/es.xml
-  - https://www.europarl.europa.eu/rss/doc/top-stories/fr.xml
-  - https://www.europarl.europa.eu/rss/doc/top-stories/it.xml
+endpoint_base: https://www.europarl.europa.eu/rss/doc/top-stories/{}.xml
+local_run_languages:
+  - en
+  - es
+  - fr
+  - it

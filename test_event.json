@@ -1,6 +1,6 @@
-{"endpoints":[
-    "https://www.europarl.europa.eu/rss/doc/top-stories/en.xml",
-    "https://www.europarl.europa.eu/rss/doc/top-stories/es.xml",
-    "https://www.europarl.europa.eu/rss/doc/top-stories/fr.xml",
-    "https://www.europarl.europa.eu/rss/doc/top-stories/it.xml"
+{"languages":[
+    "en",
+    "es",
+    "fr",
+    "it"
     ], "s3_export":false}

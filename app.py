@@ -24,6 +24,7 @@ config = read_yaml('config.yaml')
 key_prefix = 'koodoo_{}.csv'
 s3_client = boto3.client('s3')
 bucket = config['s3_bucket']
+endpoint_base = config['endpoint_base']
 
 def s3_put_df_to_csv(df, bucket, key, header):
   csv_buffer = StringIO()
@@ -31,11 +32,12 @@ def s3_put_df_to_csv(df, bucket, key, header):
   s3_client.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
 
 def handler(event: dict, context: Optional[dict] = None) -> Dict:
-  endpoints = event['endpoints']
+  languages = event['languages']
   s3_export = event['s3_export']
   df = pd.DataFrame()
-  for e in endpoints:
-    temp_df = pd.read_xml(e)
+  for l in languages:
+    endpoint = endpoint_base.format(l)
+    temp_df = pd.read_xml(endpoint)
     df = df.append(temp_df)
   curr_time = datetime.datetime.now()
   if s3_export:
@@ -58,5 +60,5 @@ def handler(event: dict, context: Optional[dict] = None) -> Dict:
       }
 
 if __name__ == '__main__':
-  endpoints = config['local_run_endpoints']
-  handler(event={'endpoints': endpoints, 's3_export':False})
+  languages = config['local_run_languages']
+  handler(event={'languages': languages, 's3_export':False})
