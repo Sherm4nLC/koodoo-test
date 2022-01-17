@@ -24,13 +24,18 @@ def s3_put_df_to_csv(df, bucket, key, header):
 
 def handler(event: dict, context: Optional[dict] = None) -> Dict:
   endpoints = event['endpoints']
+  s3_export = event['s3_export']
   df = pd.DataFrame()
   for e in endpoints:
     temp_df = pd.read_xml(e)
     df = df.append(temp_df)
   curr_time = datetime.datetime.now()
-  s3_put_df_to_csv(df, bucket, key=key_prefix.format(curr_time.timestamp()), header=True)
-  msg = f'Done importing to s3 at {curr_time.isoformat()}'
+  if s3_export:
+    s3_put_df_to_csv(df, bucket, key=key_prefix.format(curr_time.timestamp()), header=True)
+    msg = f'Done importing to s3 at {curr_time.isoformat()}'
+  else:
+    df.to_csv(key_prefix.format(curr_time.timestamp()), header=True)
+    msg = f'Done importing to local at {curr_time.isoformat()}'
   logger.info(msg)
   return {
       "statusCode":
@@ -50,4 +55,4 @@ if __name__ == '__main__':
       'https://www.europarl.europa.eu/rss/doc/top-stories/es.xml',
       'https://www.europarl.europa.eu/rss/doc/top-stories/fr.xml',
       'https://www.europarl.europa.eu/rss/doc/top-stories/it.xml',
-      ]})
+      ], 's3_export':False})
