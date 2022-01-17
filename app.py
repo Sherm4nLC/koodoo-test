@@ -6,16 +6,24 @@ import boto3
 from io import StringIO
 import datetime
 from typing import Final, Optional, TypedDict, List, Any, Tuple, Union, Dict, NamedTuple
+import yaml
 
 log_level = os.getenv('LOGLEVEL', 'DEBUG')
 logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
 
+def read_yaml(file_name):
+    with open(file_name, "r") as stream:
+        try:
+            return yaml.safe_load(stream)
+        except yaml.YAMLError as exc:
+            print(exc)
+
+config = read_yaml('config.yaml')
+
 key_prefix = 'koodoo_{}.csv'
 s3_client = boto3.client('s3')
-ssm = boto3.client('ssm', region_name='eu-west-2')
-# ssm = boto3.client('ssm')
-bucket = ssm.get_parameter(Name='koodoo-s3-bucket')['Parameter']['Value']
+bucket = config['s3_bucket']
 
 def s3_put_df_to_csv(df, bucket, key, header):
   csv_buffer = StringIO()

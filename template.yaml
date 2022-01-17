@@ -27,20 +27,8 @@ Resources:
               Action:
                 - 's3:PutObject'
               Resource: !Join [ "", [ "arn:aws:s3:::", !Ref s3BucketParameter ,"/*" ] ]
-        - Version: 2012-10-17
-          Statement:
-            - Effect: Allow
-              Action:
-                - 'ssm:GetParameters'
-                - 'ssm:GetParameter'
-              Resource: arn:aws:ssm:*
     Metadata:
       DockerTag: koodoo
       DockerContext: .
       Dockerfile: Dockerfile
-  s3Bucket:
-      Type: AWS::SSM::Parameter
-      Properties:
-          Name: /koodoo-s3-bucket
-          Type: String
-          Value: !Ref s3BucketParameter
+
