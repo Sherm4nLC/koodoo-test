@@ -42,7 +42,7 @@ def handler(event: dict, context: Optional[dict] = None) -> Dict:
     s3_put_df_to_csv(df, bucket, key=key_prefix.format(curr_time.timestamp()), header=True)
     msg = f'Done importing to s3 at {curr_time.isoformat()} with {len(df)} records.'
   else:
-    df.to_csv(key_prefix.format(curr_time.timestamp()), header=True)
+    df.to_csv(key_prefix.format(curr_time.timestamp()), header=True, index=False)
     msg = f'Done importing to local at {curr_time.isoformat()} with {len(df)} records.'
   logger.info(msg)
   return {
@@ -58,9 +58,5 @@ def handler(event: dict, context: Optional[dict] = None) -> Dict:
       }
 
 if __name__ == '__main__':
-  handler(event={'endpoints':[
-      'https://www.europarl.europa.eu/rss/doc/top-stories/en.xml',
-      'https://www.europarl.europa.eu/rss/doc/top-stories/es.xml',
-      'https://www.europarl.europa.eu/rss/doc/top-stories/fr.xml',
-      'https://www.europarl.europa.eu/rss/doc/top-stories/it.xml',
-      ], 's3_export':False})
+  endpoints = config['local_run_endpoints']
+  handler(event={'endpoints': endpoints, 's3_export':False})
