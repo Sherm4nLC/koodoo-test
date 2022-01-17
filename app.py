@@ -7,15 +7,15 @@ from io import StringIO
 import datetime
 from typing import Final, Optional, TypedDict, List, Any, Tuple, Union, Dict, NamedTuple
 
-
 log_level = os.getenv('LOGLEVEL', 'DEBUG')
 logging.getLogger(__name__).setLevel(log_level)
 logger = logging.getLogger(__name__)
 
-bucket = 'glc-01'
 key_prefix = 'koodoo_{}.csv'
-
 s3_client = boto3.client('s3')
+ssm = boto3.client('ssm', region_name='eu-west-2')
+# ssm = boto3.client('ssm')
+bucket = ssm.get_parameter(Name='koodoo-s3-bucket')['Parameter']['Value']
 
 def s3_put_df_to_csv(df, bucket, key, header):
   csv_buffer = StringIO()

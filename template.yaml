@@ -10,6 +10,11 @@ Globals:
   Function:
     Timeout: 900
 
+Parameters:
+  s3BucketParameter:
+    Type: String
+    Description: s3Bucket where to export csv file
+
 Resources:
   KoodooFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -21,9 +26,21 @@ Resources:
             - Effect: Allow
               Action:
                 - 's3:PutObject'
-              Resource: 'arn:aws:s3:::glc-01/*'
+              Resource: !Join [ "", [ "arn:aws:s3:::", !Ref s3BucketParameter ,"/*" ] ]
+        - Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'ssm:GetParameters'
+                - 'ssm:GetParameter'
+              Resource: arn:aws:ssm:*
     Metadata:
       DockerTag: koodoo
       DockerContext: .
       Dockerfile: Dockerfile
-
+  s3Bucket:
+      Type: AWS::SSM::Parameter
+      Properties:
+          Name: /koodoo-s3-bucket
+          Type: String
+          Value: !Ref s3BucketParameter
