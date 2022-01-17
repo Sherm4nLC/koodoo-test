@@ -1,8 +1,8 @@
 FROM public.ecr.aws/lambda/python:3.8
 
-COPY . app/
+COPY . /var/task
 
-WORKDIR app/
+WORKDIR /var/task
 
 RUN pip install -r requirements.txt
 

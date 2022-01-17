@@ -1,4 +1,5 @@
 import os
+import json
 import logging
 import pandas as pd
 import boto3
@@ -21,10 +22,23 @@ def s3_put_df_to_csv(df, bucket, key, header):
   df.to_csv(csv_buffer, index=False, header=header)
   s3_client.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
 
-def handler():
+def handler(event, context):
   df = pd.read_xml(endpoint)
-  s3_put_df_to_csv(df, bucket, key=key_prefix.format(datetime.datetime.now().timestamp()), header=False)
-  logger.info('Done!')
+  curr_time = datetime.datetime.now()
+  s3_put_df_to_csv(df, bucket, key=key_prefix.format(curr_time.timestamp()), header=False)
+  msg = f'Done importing to s3 at {curr_time.isoformat()}'
+  logger.info(msg)
+  return {
+      "statusCode":
+          200,
+      "headers": {
+          'Content-Type': 'application/json'
+      },
+      "body":
+          json.dumps({
+              "message": msg
+          })
+      }
 
 if __name__ == '__main__':
-  handler()
+  handler({}, {})
