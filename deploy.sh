@@ -1,8 +1,7 @@
-docker build -t koodoo .
-aws ecr get-login-password --region eu-west-2 | docker login --username AWS --password-stdin 291399082936.dkr.ecr.eu-west-2.amazonaws.com
-aws ecr create-repository --repository-name koodoo --region eu-west-2 --image-scanning-configuration scanOnPush=true --image-tag-mutability MUTABLE
-docker tag  koodoo:latest 291399082936.dkr.ecr.eu-west-2.amazonaws.com/koodoo:latest
-docker push 291399082936.dkr.ecr.eu-west-2.amazonaws.com/koodoo:latest        
+#!/bin/bash
+APP_NAME=$1
+REGION=$2
+IMAGE_REPO=$3
 
-# sam deploy --stack-name koodoo --image-repository 291399082936.dkr.ecr.eu-west-2.amazonaws.com/koodoo --region eu-west-2 --capabilities CAPABILITY_IAM
-echo "Done."
+sam build
+sam deploy --stack-name ${APP_NAME} --image-repository ${IMAGE_REPO} --region ${REGION} --capabilities CAPABILITY_IAM

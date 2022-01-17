@@ -32,10 +32,10 @@ def handler(event: dict, context: Optional[dict] = None) -> Dict:
   curr_time = datetime.datetime.now()
   if s3_export:
     s3_put_df_to_csv(df, bucket, key=key_prefix.format(curr_time.timestamp()), header=True)
-    msg = f'Done importing to s3 at {curr_time.isoformat()}'
+    msg = f'Done importing to s3 at {curr_time.isoformat()} with {len(df)} records.'
   else:
     df.to_csv(key_prefix.format(curr_time.timestamp()), header=True)
-    msg = f'Done importing to local at {curr_time.isoformat()}'
+    msg = f'Done importing to local at {curr_time.isoformat()} with {len(df)} records.'
   logger.info(msg)
   return {
       "statusCode":
