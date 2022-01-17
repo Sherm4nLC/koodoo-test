@@ -22,7 +22,7 @@ def s3_put_df_to_csv(df, bucket, key, header):
   df.to_csv(csv_buffer, index=False, header=header)
   s3_client.put_object(Bucket=bucket, Key=key, Body=csv_buffer.getvalue())
 
-def handler(event: dict, context: Optional[dict] = None):
+def handler(event: dict, context: Optional[dict] = None) -> Dict:
   endpoints = event['endpoints']
   df = pd.DataFrame()
   for e in endpoints:
